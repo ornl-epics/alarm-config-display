@@ -81,10 +81,12 @@ ul#config > li > span
 {
   display: block;
   background-color: lightgray;
-
-  margin-left: 1em;
 }
 
+.problem
+{
+  color: red;
+}
 
 .display::before
 {

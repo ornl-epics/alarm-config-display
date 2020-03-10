@@ -1,8 +1,5 @@
 // Tree view idea from https://www.w3schools.com/howto/howto_js_treeview.asp
 
-let TITLE = "IHC Alarm Configuration";
-let CONFIG_URL = "https://webopi.sns.gov/ih/files/alarm_server/IHC.xml";
-
 // Get 'display' or 'guidance'
 function get_info(comp_or_pv, type)
 {
@@ -54,12 +51,35 @@ function add_displays(comp_or_pv, $parent)
     });
 }
 
+function countInfo(comp_or_pv, type)
+{
+    if (comp_or_pv === null)
+        return 0;
+    let count = 0;
+    for (let i=0; i<comp_or_pv.childElementCount; ++i)
+        if (comp_or_pv.children[i].tagName == type)
+            ++count;
+
+    return count + countInfo(comp_or_pv.parentElement, type);
+}
+
 function display_alarm_pv(pv, $parent)
 {
+    LAST_PV = pv;
+    
+    let displays = countInfo(pv, "display");
+    let guidance = countInfo(pv, "guidance");
+    
     let name = pv.getAttribute("name");
+
+    let $helpers = jQuery("<span>").text("(Guidance: " + guidance + ", Displays: " + displays + ")")
+    if (displays <= 0   ||  guidance <= 0)
+        $helpers.addClass("problem");
+
     let $pv = jQuery("<li>").append(jQuery("<span>").addClass("caret")
                                                     .addClass("pv")
-                                                    .text("PV: " + name));
+                                                    .text("PV: " + name + " "))
+                            .append($helpers);
 
     let $info = jQuery("<ul>").addClass("nested");
 
@@ -114,30 +134,25 @@ function display_alarm_config(config)
 
 jQuery(() =>
 {
-    console.log("Alarm JS\n========");
+    let url = jQuery("#url").attr("href");
 
-    
-    jQuery("#title").text(TITLE);
-    jQuery("#url").attr("href", CONFIG_URL);
-
-    console.log("Fetching alarm config " + CONFIG_URL);
+    console.log("Fetching alarm config " + url);
 
     jQuery.get(url, data =>
     {
-    // console.log(data);
+        // console.log(data);
 
-    let config = data.firstElementChild;
-    display_alarm_config(config);
-    
-    // Instrument all the carets in the newly created tree view
-    jQuery(".caret").click(event =>
-    {
-        // console.log(event);
-        let span = event.target;
-        let li = span.parentElement;
-        li.querySelector(".nested").classList.toggle("active");
-        span.classList.toggle("caret-down");
+        let config = data.firstElementChild;
+        display_alarm_config(config);
+        
+        // Instrument all the carets in the newly created tree view
+        jQuery(".caret").click(event =>
+        {
+            // console.log(event);
+            let span = event.target;
+            let li = span.parentElement;
+            li.querySelector(".nested").classList.toggle("active");
+            span.classList.toggle("caret-down");
+        });
     });
-});
-
 });
