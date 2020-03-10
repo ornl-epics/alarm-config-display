@@ -7,27 +7,73 @@ let CONFIG_URL="https://webopi.sns.gov/ih/files/alarm_server/IHC.xml";
 let THE_DATA;
 
 
-function get_displays(comp_or_pv)
+// Get 'display' or 'guidance'
+function get_info(comp_or_pv, type)
 {
-    let displays = [];
+    let infos = [];
     for (let i=0; i<comp_or_pv.childElementCount; ++i)
-        if (comp_or_pv.children[i].tagName == 'display')
+        if (comp_or_pv.children[i].tagName == type)
             {
-                let title = comp_or_pv.children[i].getElementsByTagName("title")[0].firstChild.data;
-                let details = comp_or_pv.children[i].getElementsByTagName("details")[0].firstChild.data;
-                displays.push({ title: title, details: details });
+                let title;
+                let details;
+                try
+                {
+                    title = comp_or_pv.children[i].getElementsByTagName("title")[0].firstChild.data;
+                    details = comp_or_pv.children[i].getElementsByTagName("details")[0].firstChild.data;
+                }
+                catch (err)
+                {
+
+                }
+                infos.push({ title: title, details: details });
             }
-    return displays;
+    return infos;
 }
 
+function add_guidance(comp_or_pv, $parent)
+{
+    let guidances = get_info(comp_or_pv, 'guidance');
+    guidances.forEach(guidance =>
+    {
+        let info = jQuery("<div>").addClass("guidance")
+                                  .append(jQuery("<span>").addClass("title")
+                                                          .text("'" + guidance.title + "':"))
+                                  .append(jQuery("<br>"))
+                                  .append(jQuery("<span>").addClass("detail")
+                                                          .text(guidance.details));
+        let $display = jQuery("<li>").append(jQuery("<span>").append(info));
+        $parent.append($display);
+    });
+}
+
+function add_displays(comp_or_pv, $parent)
+{
+    let displays = get_info(comp_or_pv, 'display');
+    displays.forEach(display =>
+    {
+        let text = "'" + display.title + "' " + display.details;
+        let $display = jQuery("<li>").append(jQuery("<span>").addClass("display")
+                                                             .text(text));
+        $parent.append($display);
+    });
+}
 
 function display_alarm_pv(pv, $parent)
 {
     let name = pv.getAttribute("name");
-    let $pv = jQuery("<li>").append(jQuery("<span>").text("PV: " + name));
+    let $pv = jQuery("<li>").append(jQuery("<span>").addClass("caret")
+                                                    .addClass("pv")
+                                                    .text("PV: " + name));
 
-    // TODO  let displays = get_displays(pv);
-    // TODO description, guidance
+    let $info = jQuery("<ul>").addClass("nested");
+
+    let desc = pv.getElementsByTagName("description")[0].firstChild.data;
+    $info.append(jQuery("<li>").append(jQuery("<span>").addClass("description").text(desc)));
+    
+    add_guidance(pv, $info);
+    add_displays(pv, $info);
+    
+    $pv.append($info);
 
     $parent.append($pv);
 }
@@ -42,14 +88,7 @@ function display_alarm_component(component, $parent)
     {
         let $subcomponents = jQuery("<ul>").addClass("nested");
 
-        let displays = get_displays(component);
-        displays.forEach(display =>
-        {
-            let text = "Display '" + display.title + "': " + display.details;
-            let $display = jQuery("<li>").append(jQuery("<span>").text(text));
-            $subcomponents.append($display);
-        });
-
+        add_displays(component, $subcomponents);
 
         for (let i=0; i<component.childElementCount; ++i)
         {

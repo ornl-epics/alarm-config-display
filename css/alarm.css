@@ -22,7 +22,7 @@ ul, #config
 .caret::before
 {
   content: "\25B6";
-  color: black;
+  color: darkblue;
   display: inline-block;
   margin-right: 6px;
 }
@@ -43,4 +43,49 @@ ul, #config
 .active
 {
   display: block;
-} 
+}
+
+
+
+ul#config > li > span
+{
+  color: darkblue;
+  font-weight: bold;
+}
+
+.pv
+{
+    font-weight: bold;
+}
+
+.description
+{
+   color: blue; 
+}
+
+.guidance .title
+{
+  font-style: italic;
+}
+
+.guidance .detail
+{
+  display: block;
+  background-color: lightgray;
+
+  margin-left: 1em;
+}
+
+
+.display::before
+{
+  content: "\21e8";
+  color: darkblue;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.display
+{
+  font-style: italic;
+}
