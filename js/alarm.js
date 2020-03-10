@@ -85,7 +85,41 @@ function display_alarm_pv(pv, $parent)
 
     let desc = pv.getElementsByTagName("description")[0].firstChild.data;
     $info.append(jQuery("<li>").append(jQuery("<span>").addClass("description").text(desc)));
+
+    let settings = [];
+    try
+    {
+        if (pv.getElementsByTagName("latching")[0].firstChild.data == "true")
+            settings.push("Latching");
+    }
+    catch (err)
+    {
+        // Ignore
+    }
     
+    try
+    {
+        if (pv.getElementsByTagName("annunciating")[0].firstChild.data == "true")
+            settings.push("Annunciating");
+    }
+    catch (err)
+    {
+        // Ignore
+    }
+    
+    try
+    {
+        if (pv.getElementsByTagName("delay")[0].firstChild.data > 0)
+            settings.push(pv.getElementsByTagName("delay")[0].firstChild.data + " sec Delay");
+    }
+    catch (err)
+    {
+        // Ignore
+    }
+    
+    if (settings.length > 0)
+        $info.append(jQuery("<span>").addClass("settings").text(settings.join(", ")));
+
     add_guidance(pv, $info);
     add_displays(pv, $info);
     
@@ -138,13 +172,13 @@ function display_alarm_config(config)
 function expand_all()
 {
     jQuery(".caret").addClass("caret-down")
-                    .next().addClass("active");
+                    .siblings(".nested").addClass("active");
 }
 
 function close_all()
 {
     jQuery(".caret").removeClass("caret-down")
-                    .next().removeClass("active");
+                    .siblings(".nested").removeClass("active");
 }
 
 function expand_problems()
@@ -154,10 +188,10 @@ function expand_problems()
         let $item = jQuery(item);
         if ($item.next().find(".problem").length > 0)
             $item.addClass("caret-down")
-                 .next().addClass("active");
+                 .siblings(".nested").addClass("active");
         else
             $item.removeClass("caret-down")
-                 .next().removeClass("active");
+                 .siblings(".nested").removeClass("active");
     });
 }
 

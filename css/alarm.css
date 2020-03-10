@@ -70,7 +70,17 @@ ul#config > li > span
 
 .description
 {
-   color: blue; 
+   color: #007070; 
+}
+
+.settings
+{
+    font-size: smaller;
+}
+
+.guidance
+{
+  margin-top: 5px;
 }
 
 .guidance .title
