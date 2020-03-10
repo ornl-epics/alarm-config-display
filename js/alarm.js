@@ -132,6 +132,35 @@ function display_alarm_config(config)
             display_alarm_component(config.children[i], jQuery("#config"));
 }
 
+// <li>
+//    <span class="caret (cared-down)">
+//    <ul class="nested (active)"
+function expand_all()
+{
+    jQuery(".caret").addClass("caret-down")
+                    .next().addClass("active");
+}
+
+function close_all()
+{
+    jQuery(".caret").removeClass("caret-down")
+                    .next().removeClass("active");
+}
+
+function expand_problems()
+{
+    jQuery(".caret").each( (index, item) =>
+    {
+        let $item = jQuery(item);
+        if ($item.next().find(".problem").length > 0)
+            $item.addClass("caret-down")
+                 .next().addClass("active");
+        else
+            $item.removeClass("caret-down")
+                 .next().removeClass("active");
+    });
+}
+
 jQuery(() =>
 {
     let url = jQuery("#url").attr("href");

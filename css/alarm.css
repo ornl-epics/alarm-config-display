@@ -1,3 +1,5 @@
+/************** "Tree View" support */
+
 /* Remove default bullets */
 ul, #config
 {
@@ -46,8 +48,7 @@ ul, #config
 }
 
 
-
-
+/************** General styling */
 #title
 {
     background: #007070;
@@ -83,11 +84,6 @@ ul#config > li > span
   background-color: lightgray;
 }
 
-.problem
-{
-  color: red;
-}
-
 .display::before
 {
   content: "\21e8";
@@ -99,4 +95,9 @@ ul#config > li > span
 .display
 {
   font-style: italic;
+}
+
+.problem
+{
+  color: red;
 }
