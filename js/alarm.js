@@ -1,11 +1,7 @@
-
 // Tree view idea from https://www.w3schools.com/howto/howto_js_treeview.asp
 
-// CONFIG_URL="IHC.xml";
-let CONFIG_URL="https://webopi.sns.gov/ih/files/alarm_server/IHC.xml";
-
-let THE_DATA;
-
+let TITLE = "IHC Alarm Configuration";
+let CONFIG_URL = "https://webopi.sns.gov/ih/files/alarm_server/IHC.xml";
 
 // Get 'display' or 'guidance'
 function get_info(comp_or_pv, type)
@@ -119,27 +115,29 @@ function display_alarm_config(config)
 jQuery(() =>
 {
     console.log("Alarm JS\n========");
+
+    
+    jQuery("#title").text(TITLE);
+    jQuery("#url").attr("href", CONFIG_URL);
+
     console.log("Fetching alarm config " + CONFIG_URL);
 
-    jQuery.get(CONFIG_URL,
-               data =>
-               {
-                console.log(data);
-                THE_DATA = data;
+    jQuery.get(url, data =>
+    {
+    // console.log(data);
 
-
-                let config = THE_DATA.firstElementChild;
-                display_alarm_config(config);
-                
-                // Instrument all the carets in the newly created tree view
-                jQuery(".caret").click(event =>
-                {
-                    // console.log(event);
-                    let span = event.target;
-                    let li = span.parentElement;
-                    li.querySelector(".nested").classList.toggle("active");
-                    span.classList.toggle("caret-down");
-                });
-            });
+    let config = data.firstElementChild;
+    display_alarm_config(config);
+    
+    // Instrument all the carets in the newly created tree view
+    jQuery(".caret").click(event =>
+    {
+        // console.log(event);
+        let span = event.target;
+        let li = span.parentElement;
+        li.querySelector(".nested").classList.toggle("active");
+        span.classList.toggle("caret-down");
+    });
+});
 
 });

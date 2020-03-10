@@ -22,7 +22,7 @@ ul, #config
 .caret::before
 {
   content: "\25B6";
-  color: darkblue;
+  color: #007070;
   display: inline-block;
   margin-right: 6px;
 }
@@ -47,9 +47,18 @@ ul, #config
 
 
 
+
+#title
+{
+    background: #007070;
+    color: white;
+    margin: 0 0 10px 0;
+    padding: 5px;
+}
+
 ul#config > li > span
 {
-  color: darkblue;
+  color: #007070;
   font-weight: bold;
 }
 
