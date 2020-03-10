@@ -6,34 +6,58 @@ let CONFIG_URL="https://webopi.sns.gov/ih/files/alarm_server/IHC.xml";
 
 let THE_DATA;
 
+
+function get_displays(comp_or_pv)
+{
+    let displays = [];
+    for (let i=0; i<comp_or_pv.childElementCount; ++i)
+        if (comp_or_pv.children[i].tagName == 'display')
+            {
+                let title = comp_or_pv.children[i].getElementsByTagName("title")[0].firstChild.data;
+                let details = comp_or_pv.children[i].getElementsByTagName("details")[0].firstChild.data;
+                displays.push({ title: title, details: details });
+            }
+    return displays;
+}
+
+
 function display_alarm_pv(pv, $parent)
 {
     let name = pv.getAttribute("name");
     let $pv = jQuery("<li>").append(jQuery("<span>").text("PV: " + name));
+
+    // TODO  let displays = get_displays(pv);
+    // TODO description, guidance
+
     $parent.append($pv);
 }
 
 function display_alarm_component(component, $parent)
 {
-    if (component.tagName == 'pv')
-    {
-        display_alarm_pv(component, $parent);
-        return;
-    }
-    if (component.tagName != 'component')
-    {
-        console.log("Missing <component>");
-        return;
-    }
     let name = component.getAttribute("name");
-
+    
     let $component = jQuery("<li>").append(jQuery("<span>").addClass("caret")
                                                            .text(name));
     if (component.childElementCount > 0)
     {
         let $subcomponents = jQuery("<ul>").addClass("nested");
+
+        let displays = get_displays(component);
+        displays.forEach(display =>
+        {
+            let text = "Display '" + display.title + "': " + display.details;
+            let $display = jQuery("<li>").append(jQuery("<span>").text(text));
+            $subcomponents.append($display);
+        });
+
+
         for (let i=0; i<component.childElementCount; ++i)
-            display_alarm_component(component.children[i], $subcomponents);
+        {
+            if (component.children[i].tagName == 'component')
+                display_alarm_component(component.children[i], $subcomponents);
+            else if (component.children[i].tagName == 'pv')
+                display_alarm_pv(component.children[i], $subcomponents);
+        }
         $component.append($subcomponents);
     }
 
@@ -49,7 +73,8 @@ function display_alarm_config(config)
     }
     
     for (let i=0; i<config.childElementCount; ++i)
-        display_alarm_component(config.children[i], jQuery("#config"));
+        if (config.children[i].tagName == 'component')
+            display_alarm_component(config.children[i], jQuery("#config"));
 }
 
 jQuery(() =>
