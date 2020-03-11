@@ -182,7 +182,9 @@ function display_alarm_config(config)
             display_alarm_component(config.children[i], $config);
     
     let count = jQuery(".pv").length;
-    jQuery("<p>").text("Total PV Count: " + count)
+    let disabled = jQuery(".disabled").length;
+    jQuery("<p>").html("Total PV Count: " + count + "<br>" + 
+                       "Disabled PV Count: " + disabled)
                  .insertAfter($config);
 }
 
