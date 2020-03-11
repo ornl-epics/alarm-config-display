@@ -27,5 +27,5 @@ google-chrome --disable-web-security --user-data-dir=/tmp
 Updates
 -------
 
- * 2020/03/11 Indicate 'disabled' PVs
+ * 2020/03/11 Indicate 'disabled' PVs. Count PVs.
  * 2020/03/10 Initial version

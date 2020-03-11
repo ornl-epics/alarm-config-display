@@ -176,9 +176,14 @@ function display_alarm_config(config)
         return;
     }
     
+    let $config = jQuery("#config");
     for (let i=0; i<config.childElementCount; ++i)
         if (config.children[i].tagName == 'component')
-            display_alarm_component(config.children[i], jQuery("#config"));
+            display_alarm_component(config.children[i], $config);
+    
+    let count = jQuery(".pv").length;
+    jQuery("<p>").text("Total PV Count: " + count)
+                 .insertAfter($config);
 }
 
 // <li>
