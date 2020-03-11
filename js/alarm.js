@@ -76,9 +76,11 @@ function display_alarm_pv(pv, $parent)
     if (displays <= 0   ||  guidance <= 0)
         $helpers.addClass("problem");
 
-    let $pv = jQuery("<li>").append(jQuery("<span>").addClass("caret")
-                                                    .addClass("pv")
-                                                    .text("PV: " + name + " "))
+
+    let $pvname = jQuery("<span>").addClass("caret")
+                                  .addClass("pv")
+                                  .text("PV: " + name + " ");
+    let $pv = jQuery("<li>").append($pvname)
                             .append($helpers);
 
     let $info = jQuery("<ul>").addClass("nested");
@@ -87,6 +89,19 @@ function display_alarm_pv(pv, $parent)
     $info.append(jQuery("<li>").append(jQuery("<span>").addClass("description").text(desc)));
 
     let settings = [];
+    try
+    {
+        if (pv.getElementsByTagName("enabled")[0].firstChild.data == "false")
+        {
+            settings.push("Disabled");
+            $pvname.addClass("disabled");
+        }
+    }
+    catch (err)
+    {
+        // Ignore
+    }
+
     try
     {
         if (pv.getElementsByTagName("latching")[0].firstChild.data == "true")
@@ -194,6 +209,21 @@ function expand_problems()
                  .siblings(".nested").removeClass("active");
     });
 }
+
+function expand_disabled()
+{
+    jQuery(".caret").each( (index, item) =>
+    {
+        let $item = jQuery(item);
+        if ($item.next().find(".disabled").length > 0)
+            $item.addClass("caret-down")
+                 .siblings(".nested").addClass("active");
+        else
+            $item.removeClass("caret-down")
+                 .siblings(".nested").removeClass("active");
+    });
+}
+
 
 jQuery(() =>
 {

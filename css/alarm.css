@@ -68,6 +68,11 @@ ul#config > li > span
     font-weight: bold;
 }
 
+.disabled
+{
+    color: gray;
+}
+
 .description
 {
    color: #007070; 
