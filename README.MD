@@ -10,6 +10,8 @@ Configuration
 In index.html, adjust initial text as desired,
 then set the 'url' to the alarm configuration snapshot.
 
+In alarm.js, configure the settings with CONFIG comment.
+
 
 Development
 -----------
@@ -27,5 +29,6 @@ google-chrome --disable-web-security --user-data-dir=/tmp
 Updates
 -------
 
+ * 2020/03/12 Indicate 'automated_actions'. Styling.
  * 2020/03/11 Indicate 'disabled' PVs. Count PVs.
  * 2020/03/10 Initial version

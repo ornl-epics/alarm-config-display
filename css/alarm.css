@@ -23,7 +23,7 @@ ul, #config
 /* Create the caret/arrow with a unicode, and style it */
 .caret::before
 {
-  content: "\25B6";
+  content: "\25B9";
   color: #007070;
   display: inline-block;
   margin-right: 6px;
@@ -95,19 +95,31 @@ ul#config > li > span
 
 .guidance .detail
 {
-  display: block;
-  background-color: lightgray;
+  display: inline-block;
+  background-color: rgb(228, 253, 251);
+  margin: 0em 2em 1em 1em;
 }
 
 .display::before
 {
   content: "\21e8";
-  color: darkblue;
   display: inline-block;
   margin-right: 6px;
 }
 
 .display
+{
+  font-style: italic;
+}
+
+.action::before
+{
+  content: "\261e";
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.action
 {
   font-style: italic;
 }

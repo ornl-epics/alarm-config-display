@@ -1,6 +1,21 @@
 // Tree view idea from https://www.w3schools.com/howto/howto_js_treeview.asp
 
-// Get 'display' or 'guidance'
+
+// CONFIG:
+// Prefix for display builder web runtime.
+// Set to empty if not supported
+let dbwr = "https://status.sns.ornl.gov/dbwr/view.jsp?display=";
+
+// CONFIG:
+// Display path mappings,
+// array with entries [ "/original/path/", "/replacement/path/" ]
+let replacements =
+[
+    [ "/home/controls/share/", "https://webopi.sns.gov/ih/files/share/" ]
+];
+
+
+// Get 'display', 'guidance', 'automated_action'
 function get_info(comp_or_pv, type)
 {
     let infos = [];
@@ -39,13 +54,44 @@ function add_guidance(comp_or_pv, $parent)
     });
 }
 
+function wrap_display(display)
+{
+    if (display.endsWith(".bob")  ||
+        display.endsWith(".opi"))
+    {
+        for (let i=0; i<replacements.length; ++i)
+        {
+            if (display.startsWith(replacements[i][0]))
+            {
+                display = replacements[i][1] + display.substring(replacements[i][0].length);
+            }
+        }
+        return '<a href="' + dbwr + display + '">' + display + '</a>';
+    }
+    else if (display.startsWith("http"))
+        return '<a href="' + display + '">' + display + '</a>';
+    return display;
+}
+
 function add_displays(comp_or_pv, $parent)
 {
     let displays = get_info(comp_or_pv, 'display');
     displays.forEach(display =>
     {
-        let text = "'" + display.title + "' " + display.details;
+        let text = "'" + display.title + "' " + wrap_display(display.details);
         let $display = jQuery("<li>").append(jQuery("<span>").addClass("display")
+                                                             .html(text));
+        $parent.append($display);
+    });
+}
+
+function add_auto(comp_or_pv, $parent)
+{
+    let actions = get_info(comp_or_pv, 'automated_action');
+    actions.forEach(action =>
+    {
+        let text = "'" + action.title + "': " + action.details;
+        let $display = jQuery("<li>").append(jQuery("<span>").addClass("action")
                                                              .text(text));
         $parent.append($display);
     });
@@ -86,7 +132,7 @@ function display_alarm_pv(pv, $parent)
     let $info = jQuery("<ul>").addClass("nested");
 
     let desc = pv.getElementsByTagName("description")[0].firstChild.data;
-    $info.append(jQuery("<li>").append(jQuery("<span>").addClass("description").text(desc)));
+    $info.append(jQuery("<li>").append(jQuery("<span>").addClass("description").text("'" + desc + "'")));
 
     let settings = [];
     try
@@ -137,7 +183,8 @@ function display_alarm_pv(pv, $parent)
 
     add_guidance(pv, $info);
     add_displays(pv, $info);
-    
+    add_auto(pv, $info);
+
     $pv.append($info);
 
     $parent.append($pv);
@@ -154,6 +201,7 @@ function display_alarm_component(component, $parent)
         let $subcomponents = jQuery("<ul>").addClass("nested");
 
         add_displays(component, $subcomponents);
+        add_auto(component, $subcomponents);
 
         for (let i=0; i<component.childElementCount; ++i)
         {
