@@ -3,6 +3,8 @@ Web Display for Alarm Configuration
 
 Loads an alarm configuration XML file and pretty-prints its content.
 
+For a related web display of current alarms, see https://github.com/ornl-epics/alarm-webmon
+
 
 Configuration
 -------------
