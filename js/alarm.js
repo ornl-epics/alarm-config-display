@@ -27,11 +27,18 @@ function get_info(comp_or_pv, type)
                 try
                 {
                     title = comp_or_pv.children[i].getElementsByTagName("title")[0].firstChild.data;
+                }
+                catch (err)
+                {
+                    title = "(no title)";
+                }
+                try
+                {
                     details = comp_or_pv.children[i].getElementsByTagName("details")[0].firstChild.data;
                 }
                 catch (err)
                 {
-
+                    details = "(no display)";
                 }
                 infos.push({ title: title, details: details });
             }
@@ -56,6 +63,8 @@ function add_guidance(comp_or_pv, $parent)
 
 function wrap_display(display)
 {
+    if (display === undefined)
+        return "undefined";
     if (display.endsWith(".bob")  ||
         display.endsWith(".opi"))
     {

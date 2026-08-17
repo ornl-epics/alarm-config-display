@@ -6,6 +6,12 @@ Loads an alarm configuration XML file and pretty-prints its content.
 For a related web display of current alarms, see https://github.com/ornl-epics/alarm-webmon
 
 
+Build
+-----
+
+There is nothing to build or compile, it's a pure html/js/css tool.
+
+
 Configuration
 -------------
 
@@ -31,6 +37,7 @@ google-chrome --disable-web-security --user-data-dir=/tmp
 Updates
 -------
 
+ * 2026/08/17 Handle empty title or detail in displays.
  * 2020/03/12 Indicate 'automated_actions'. Styling.
  * 2020/03/11 Indicate 'disabled' PVs. Count PVs.
  * 2020/03/10 Initial version
